@@ -2,7 +2,12 @@
 
 SSH_KEYS=${DO_SSH_KEYS:-33340088}
 IMAGE=${DO_IMAGE:-103272717}
-REGION=$(doctl compute image get $IMAGE -o json | jq -r '.[].regions[]' | sort -R | head -n 1)
+
+REGION=ams2
+while [ $REGION = ams2 ]; # ams2 region was not available for some reason
+do 
+    REGION=$(doctl compute image get $IMAGE -o json | jq -r '.[].regions[]' | sort -R | head -n 1)
+done
 
 echo $REGION
 doctl compute droplet create putin-must-die-$RANDOM-$RANDOM \
